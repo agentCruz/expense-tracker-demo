@@ -5,11 +5,11 @@ import { useDeleteExpense } from "./hooks/use-delete-expense";
 import { useFetchExpenses } from "./hooks/use-fetch-expense";
 import { Loader2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { calculateTotalExpenses } from "./api/crud-expenses.api";
 
 export function HomePageUi() {
     const { data: expenses, isLoading } = useFetchExpenses();
     const { mutate: deleteExpense } = useDeleteExpense();
-    const localExpenses = useExpenseStore((state) => state.expenses); // Zustand state
 
     const handleDeleteExpense = (id: string) => {
         deleteExpense(id);
@@ -24,7 +24,9 @@ export function HomePageUi() {
                     <CardHeader>
                         <CardTitle>Expense</CardTitle>
                     </CardHeader>
-                    <CardContent className="pl-2">45,000</CardContent>
+                    {
+                        expenses && <CardContent className="pl-2">{calculateTotalExpenses(expenses)}</CardContent>
+                    }
                 </Card>
             </div>
 
@@ -37,7 +39,7 @@ export function HomePageUi() {
             </Link>
 
             <ul>
-                {localExpenses?.map((expense) => (
+                {expenses?.map((expense) => (
                     <li key={expense.id} className="m-5">
                         {expense.description} - ${expense.amount}
                         <Link to={`/expense/${expense.id}`} className="m-5">

@@ -61,3 +61,7 @@ export const getExpenseById = (id: string) => {
   // Return the found expense or null if not found
   return expense || null;
 };
+
+export const calculateTotalExpenses = (expenses: Expense[]): number => {
+  return expenses.reduce((total, expense) => total + expense.amount, 0);
+};

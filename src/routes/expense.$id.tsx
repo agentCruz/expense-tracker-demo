@@ -10,7 +10,7 @@ export const Route = createFileRoute('/expense/$id')({
         const { queryClient } = context;
         const expenseID = String(params.id);
 
-        // // Validate expense ID
+        // Validate expense ID
         if (!z.string().uuid(expenseID)) {
             alert('Invalid Expense ID');
             throw redirect({ to: '/' });
