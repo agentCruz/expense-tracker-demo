@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { useExpenseStore } from "@expense-app/stores";
 import { useDeleteExpense } from "./hooks/use-delete-expense";
 import { useFetchExpenses } from "./hooks/use-fetch-expense";
 import { Loader2 } from "lucide-react";

@@ -5,9 +5,6 @@ import { useExpenseStore } from "@expense-app/stores";
 // Simulate a delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// In-memory data store to simulate a database
-let expenses: Expense[] = [];
-
 // Generate a random ID
 const generateId = () => crypto.randomUUID();
 
@@ -17,7 +14,8 @@ export const createExpense = async (
 ): Promise<Expense> => {
   await delay(2000); // Simulate network delay
   const expense: Expense = { ...newExpense, id: generateId() };
-  expenses.push(expense);
+  const { addExpense } = useExpenseStore.getState();
+  addExpense(expense);
   return expense;
 };
 
@@ -26,30 +24,33 @@ export const updateExpense = async (
   updatedExpense: Expense
 ): Promise<Expense> => {
   await delay(2000); // Simulate network delay
-  expenses = expenses.map((expense) =>
-    expense.id === updatedExpense.id ? updatedExpense : expense
-  );
+  const { updateExpense } = useExpenseStore.getState();
+  updateExpense(updatedExpense);
   return updatedExpense;
 };
 
 // DELETE - Delete an expense
 export const deleteExpense = async (id: string): Promise<string> => {
   await delay(2000); // Simulate network delay
-  expenses = expenses.filter((expense) => expense.id !== id);
+  const { deleteExpense } = useExpenseStore.getState();
+  deleteExpense(id);
   return id;
 };
 
 // GET - Fetch all expenses
 export const fetchExpenses = async (): Promise<Expense[]> => {
-  const { expenses: localStorageExpenses } = useExpenseStore.getState();
+  const { expenses: localStorageExpenses, setExpenses } =
+    useExpenseStore.getState();
 
   if (localStorageExpenses.length > 0) {
-    return (expenses = localStorageExpenses);
+    return localStorageExpenses;
   }
 
   const defaultExpenses = await getExpenses(10); // Generate 10 default expenses
-  // Return a combination of default expenses and current expenses (including newly created or updated ones)
-  return [...defaultExpenses, ...expenses];
+
+  setExpenses(defaultExpenses);
+
+  return defaultExpenses;
 };
 
 export const getExpenseById = (id: string) => {
