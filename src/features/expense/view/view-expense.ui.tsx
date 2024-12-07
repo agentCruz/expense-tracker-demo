@@ -18,7 +18,10 @@ export function ViewExpenseUi() {
 
             <div>
                 <div>Description: {data?.description}</div>
-                <div>Amount: {data?.amount}</div>
+                <div>Amount: {new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "NGN",
+                }).format(data?.amount ?? 0)}</div>
                 <div>Date: {data?.date}</div>
                 <div>Category: {data?.category}</div>
             </div>

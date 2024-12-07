@@ -19,7 +19,12 @@ export function HomePageUi() {
                         <CardTitle>Expense</CardTitle>
                     </CardHeader>
                     {
-                        expenses && <CardContent className="pl-2">{calculateTotalExpenses(expenses)}</CardContent>
+                        expenses && <CardContent className="pl-2">{
+                            new Intl.NumberFormat("en-US", {
+                                style: "currency",
+                                currency: "NGN",
+                            }).format(calculateTotalExpenses(expenses))
+                        }</CardContent>
                     }
                 </Card>
             </div>

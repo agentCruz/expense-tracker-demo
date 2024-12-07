@@ -38,6 +38,7 @@ import {
 import { Expense } from "@expense-app/types"
 import { Link } from "@tanstack/react-router"
 import { useDeleteExpense } from "./hooks/use-delete-expense"
+import { useState } from "react"
 
 
 export const columns: ColumnDef<Expense>[] = [
@@ -91,10 +92,9 @@ export const columns: ColumnDef<Expense>[] = [
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue("amount"))
 
-            // Format the amount as a dollar amount
             const formatted = new Intl.NumberFormat("en-US", {
                 style: "currency",
-                currency: "USD",
+                currency: "NGN",
             }).format(amount)
 
             return <div className="text-right font-medium">{formatted}</div>
@@ -151,13 +151,13 @@ type Props = {
 }
 
 export function DataTable({ data }: Props) {
-    const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    const [sorting, setSorting] = useState<SortingState>([])
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         []
     )
     const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({})
-    const [rowSelection, setRowSelection] = React.useState({})
+        useState<VisibilityState>({})
+    const [rowSelection, setRowSelection] = useState({})
 
     const table = useReactTable({
         data,
