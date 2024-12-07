@@ -1,18 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { useDeleteExpense } from "./hooks/use-delete-expense";
 import { useFetchExpenses } from "./hooks/use-fetch-expense";
 import { Loader2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { calculateTotalExpenses } from "./api/crud-expenses.api";
+import { DataTable } from "./table";
 
 export function HomePageUi() {
     const { data: expenses, isLoading } = useFetchExpenses();
-    const { mutate: deleteExpense } = useDeleteExpense();
-
-    const handleDeleteExpense = (id: string) => {
-        deleteExpense(id);
-    };
 
     if (isLoading) return <Loader2 className="justify-center align-middle animate-spin" />;
 
@@ -37,7 +32,11 @@ export function HomePageUi() {
                 </Button>
             </Link>
 
-            <ul>
+            {
+                expenses && <DataTable data={expenses} />
+            }
+
+            {/* <ul>
                 {expenses?.map((expense) => (
                     <li key={expense.id} className="m-5">
                         {expense.description} - ${expense.amount}
@@ -53,7 +52,7 @@ export function HomePageUi() {
                         <Button onClick={() => handleDeleteExpense(expense.id)} className="m-5" variant={'destructive'}>Delete</Button>
                     </li>
                 ))}
-            </ul>
+            </ul> */}
         </div>
     )
 }
