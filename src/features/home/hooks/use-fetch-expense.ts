@@ -1,6 +1,6 @@
 import { useExpenseStore } from "@expense-app/stores";
 import { useQuery } from "@tanstack/react-query";
-import { fetchExpenses } from "../api/crud-expenses.api";
+import { fetchExpenses, getExpenseById } from "../api/crud-expenses.api";
 
 export function useFetchExpenses() {
   const setExpenses = useExpenseStore((state) => state.setExpenses);
@@ -11,5 +11,12 @@ export function useFetchExpenses() {
     onSuccess: (data) => {
       setExpenses(data);
     },
+  });
+}
+
+export function useFetchExpenseById(id: string) {
+  return useQuery({
+    queryKey: ["expense", id],
+    queryFn: () => getExpenseById(id),
   });
 }

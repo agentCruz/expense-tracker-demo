@@ -1,39 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useExpenseStore } from "@expense-app/stores";
-import { Expense } from "@expense-app/types";
-import { useState } from "react";
-import { useCreateExpense } from "./hooks/use-create-expense";
 import { useDeleteExpense } from "./hooks/use-delete-expense";
 import { useFetchExpenses } from "./hooks/use-fetch-expense";
-import { useUpdateExpense } from "./hooks/use-update-expense";
 import { Loader2 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export function HomePageUi() {
     const { data: expenses, isLoading } = useFetchExpenses();
-    const { mutate: createExpense } = useCreateExpense();
-    const { mutate: updateExpense } = useUpdateExpense();
     const { mutate: deleteExpense } = useDeleteExpense();
     const localExpenses = useExpenseStore((state) => state.expenses); // Zustand state
 
-    const [newExpense, setNewExpense] = useState({
-        description: "",
-        amount: 0,
-        category: "Food",
-        date: new Date().toISOString(),
-    });
-
-    const handleAddExpense = () => {
-        createExpense(newExpense);
-    };
-
     const handleDeleteExpense = (id: string) => {
         deleteExpense(id);
-    };
-
-    const handleUpdateExpense = (expense: Expense) => {
-        const updatedExpense = { ...expense, amount: expense.amount + 10 }; // Example update
-        updateExpense(updatedExpense);
     };
 
     if (isLoading) return <Loader2 className="justify-center align-middle animate-spin" />;
@@ -49,25 +28,31 @@ export function HomePageUi() {
                 </Card>
             </div>
 
-            <Button
-                onClick={handleAddExpense}
-                className="mb-4"
-            >
-                Add Expense
-            </Button>
+            <Link to="/add-expense">
+                <Button
+                    className="mb-4"
+                >
+                    Add Expense
+                </Button>
+            </Link>
 
             <ul>
                 {localExpenses?.map((expense) => (
-                    <li key={expense.id}>
+                    <li key={expense.id} className="m-5">
                         {expense.description} - ${expense.amount}
-                        <button onClick={() => handleDeleteExpense(expense.id)}>Delete</button>
-                        <button onClick={() => handleUpdateExpense(expense)}>Update</button>
+                        <Link to={`/expense/${expense.id}`} className="m-5">
+                            View
+                        </Link>
+
+                        <Link to={`/edit-expense/${expense.id}`} className="m-5">
+                            <Button variant={'secondary'}>
+                                Update
+                            </Button>
+                        </Link>
+                        <Button onClick={() => handleDeleteExpense(expense.id)} className="m-5" variant={'destructive'}>Delete</Button>
                     </li>
                 ))}
             </ul>
-
-            <h2>Local (Zustand) State</h2>
-            <pre>{JSON.stringify(localExpenses, null, 2)}</pre>
         </div>
     )
 }

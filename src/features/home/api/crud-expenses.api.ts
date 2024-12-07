@@ -44,10 +44,20 @@ export const fetchExpenses = async (): Promise<Expense[]> => {
   const { expenses: localStorageExpenses } = useExpenseStore.getState();
 
   if (localStorageExpenses.length > 0) {
-    return expenses = localStorageExpenses;
+    return (expenses = localStorageExpenses);
   }
 
   const defaultExpenses = await getExpenses(10); // Generate 10 default expenses
   // Return a combination of default expenses and current expenses (including newly created or updated ones)
   return [...defaultExpenses, ...expenses];
+};
+
+export const getExpenseById = (id: string) => {
+  const { expenses } = useExpenseStore.getState();
+
+  // Find the expense with the given ID
+  const expense = expenses.find((expense) => expense.id === id);
+
+  // Return the found expense or null if not found
+  return expense || null;
 };
